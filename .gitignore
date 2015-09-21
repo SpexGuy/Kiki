@@ -61,3 +61,5 @@ $RECYCLE.BIN/
 # IntelliJ
 *.iml
 .idea/
+src/CFlat.jlex.java
+*.out

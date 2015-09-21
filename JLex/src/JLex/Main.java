@@ -3835,7 +3835,7 @@ public class Main
 
 	if (arg.length < 1)
 	  {
-	    System.out.println("Usage: JLex.Main <filename>");
+	    System.out.println("Usage: Main <filename>");
 	    return;
 	  }
 

@@ -49,15 +49,59 @@ class StrLitTokenVal extends TokenVal {
     }
 }
 
-// The following class is used to keep track of the character number at which
-// the current token starts on its line.
-class CharNum {
-    static int num=1;
-}
 %%
 
-DIGIT=        [0-9]
-WHITESPACE=   [\040\t]
+DIGIT       = [0-9]
+WHITESPACE  = [\040\t]
+LETTER      = [a-zA-Z]
+IDENT_CHAR  = {LETTER}|[_]
+NEWLINE     = [\r]?[\n]
+PLUSPLUS    = "++"
+DIVIDE      = "/"
+EQUALS      = "=="
+GREATER     = ">"
+LPAREN      = "("
+INT         = "int"
+LESS        = "<"
+MINUS       = "-"
+WRITE       = "<<"
+RPAREN      = ")"
+NOT         = "!"
+SEMICOLON   = ";"
+AND         = "&&"
+OR          = "||"
+BOOL        = "bool"
+COMMA       = ","
+PLUS        = "+"
+ASSIGN      = "="
+LESSEQ      = "<="
+IF          = "if"
+DOT         = "."
+ID          = {IDENT_CHAR}({IDENT_CHAR}|{DIGIT})*
+MINUSMINUS  = "--"
+RETURN      = "return"
+TRUE        = "true"
+LCURLY      = "{"
+CIN         = "cin"
+VOID        = "void"
+RCURLY      = "}"
+INTLITERAL  = {DIGIT}+
+TIMES       = "*"
+ELSE        = "else"
+COUT        = "cout"
+READ        = ">>"
+NOTEQUALS   = "!="
+WHILE       = "while"
+GREATEREQ   = ">="
+STRING_CHAR = [^\\\"]|[\\][\\\'\"nt?]
+BADSTR_CHAR = [\\][^\\\'\"nt?]
+STRINGLITERAL = [\"]{STRING_CHAR}*[\"]
+UNTERMSTRING  = [\"]{STRING_CHAR}*{NEWLINE}
+BADESCAPE     = [\"]{STRING_CHAR}*{BADSTR_CHAR}({BADSTR_CHAR}|{STRING_CHAR})*[\"]
+UNTERMBADSTR  = [\"]{STRING_CHAR}*{BADSTR_CHAR}({BADSTR_CHAR}|{STRING_CHAR})*[\\]?{NEWLINE}
+COMMENT     = (//|#)[^\n]*{NEWLINE}
+FALSE       = "false"
+STRUCT      = "struct"
 
 %implements java_cup.runtime.Scanner
 %function next_token
@@ -68,28 +112,63 @@ return new Symbol(sym.EOF);
 %eofval}
 
 %line
+%char
 
 %%
 
-{DIGIT}+  { // NOTE: the following computation of the integer value does NOT
-            //       check for overflow.  This must be changed.
-            int val = (new Integer(yytext())).intValue();
-            Symbol S = new Symbol(sym.INTLITERAL,
-                             new IntLitTokenVal(yyline+1, CharNum.num, val));
-            CharNum.num += yytext().length();
-            return S;
-          }
+\n { /*"*/ }
+\r { }
+{WHITESPACE}+  { }
+{COMMENT} { }
 
-\n        { CharNum.num = 1; }
+{PLUSPLUS}  { return new Symbol(sym.PLUSPLUS, new TokenVal(yyline+1, yychar+1)); }
+{DIVIDE}  { return new Symbol(sym.DIVIDE, new TokenVal(yyline+1, yychar+1)); }
+{EQUALS}  { return new Symbol(sym.EQUALS, new TokenVal(yyline+1, yychar+1)); }
+{GREATER}  { return new Symbol(sym.GREATER, new TokenVal(yyline+1, yychar+1)); }
+{LPAREN}  { return new Symbol(sym.LPAREN, new TokenVal(yyline+1, yychar+1)); }
+{INT}  { return new Symbol(sym.INT, new TokenVal(yyline+1, yychar+1)); }
+{LESS}  { return new Symbol(sym.LESS, new TokenVal(yyline+1, yychar+1)); }
+{MINUS}  { return new Symbol(sym.MINUS, new TokenVal(yyline+1, yychar+1)); }
+{WRITE}  { return new Symbol(sym.WRITE, new TokenVal(yyline+1, yychar+1)); }
+{RPAREN}  { return new Symbol(sym.RPAREN, new TokenVal(yyline+1, yychar+1)); }
+{NOT}  { return new Symbol(sym.NOT, new TokenVal(yyline+1, yychar+1)); }
+{SEMICOLON}  { return new Symbol(sym.SEMICOLON, new TokenVal(yyline+1, yychar+1)); }
+{AND}  { return new Symbol(sym.AND, new TokenVal(yyline+1, yychar+1)); }
+{OR}  { return new Symbol(sym.OR, new TokenVal(yyline+1, yychar+1)); }
+{BOOL}  { return new Symbol(sym.BOOL, new TokenVal(yyline+1, yychar+1)); }
+{COMMA}  { return new Symbol(sym.COMMA, new TokenVal(yyline+1, yychar+1)); }
+{PLUS}  { return new Symbol(sym.PLUS, new TokenVal(yyline+1, yychar+1)); }
+{ASSIGN}  { return new Symbol(sym.ASSIGN, new TokenVal(yyline+1, yychar+1)); }
+{LESSEQ}  { return new Symbol(sym.LESSEQ, new TokenVal(yyline+1, yychar+1)); }
+{IF}  { return new Symbol(sym.IF, new TokenVal(yyline+1, yychar+1)); }
+{DOT}  { return new Symbol(sym.DOT, new TokenVal(yyline+1, yychar+1)); }
+{ID}  { return new Symbol(sym.ID, new IdTokenVal(yyline+1, yychar+1, yytext())); }
+{MINUSMINUS}  { return new Symbol(sym.MINUSMINUS, new TokenVal(yyline+1, yychar+1)); }
+{RETURN}  { return new Symbol(sym.RETURN, new TokenVal(yyline+1, yychar+1)); }
+{TRUE}  { return new Symbol(sym.TRUE, new TokenVal(yyline+1, yychar+1)); }
+{LCURLY}  { return new Symbol(sym.LCURLY, new TokenVal(yyline+1, yychar+1)); }
+{CIN}  { return new Symbol(sym.CIN, new TokenVal(yyline+1, yychar+1)); }
+{VOID}  { return new Symbol(sym.VOID, new TokenVal(yyline+1, yychar+1)); }
+{RCURLY}  { return new Symbol(sym.RCURLY, new TokenVal(yyline+1, yychar+1)); }
+{INTLITERAL} {
+    try {
+      return new Symbol(sym.INTLITERAL, new IntLitTokenVal(yyline+1, yychar+1, Integer.parseInt(yytext())));
+    } catch (NumberFormatException e) {
+      return new Symbol(sym.INTLITERAL, new IntLitTokenVal(yyline+1, yychar+1, Integer.MAX_VALUE));
+    }
+}
+{TIMES}  { return new Symbol(sym.TIMES, new TokenVal(yyline+1, yychar+1)); }
+{ELSE}  { return new Symbol(sym.ELSE, new TokenVal(yyline+1, yychar+1)); }
+{COUT}  { return new Symbol(sym.COUT, new TokenVal(yyline+1, yychar+1)); }
+{READ}  { return new Symbol(sym.READ, new TokenVal(yyline+1, yychar+1)); }
+{NOTEQUALS}  { return new Symbol(sym.NOTEQUALS, new TokenVal(yyline+1, yychar+1)); }
+{WHILE}  { return new Symbol(sym.WHILE, new TokenVal(yyline+1, yychar+1)); }
+{GREATEREQ}  { return new Symbol(sym.GREATEREQ, new TokenVal(yyline+1, yychar+1)); }
+{STRINGLITERAL}  { return new Symbol(sym.STRINGLITERAL, new StrLitTokenVal(yyline+1, yychar+1, yytext())); }
+{FALSE}  { return new Symbol(sym.FALSE, new TokenVal(yyline+1, yychar+1)); }
+{STRUCT}  { return new Symbol(sym.STRUCT, new TokenVal(yyline+1, yychar+1)); }
 
-{WHITESPACE}+  { CharNum.num += yytext().length(); }
-
-"+"       { Symbol S = new Symbol(sym.PLUS, new TokenVal(yyline+1, CharNum.num));
-            CharNum.num++;
-            return S;
-          }
-        
-.         { ErrMsg.fatal(yyline+1, CharNum.num,
-                         "ignoring illegal character: " + yytext());
-            CharNum.num++;
-          }
+{UNTERMSTRING} { ErrMsg.fatal(yyline+1, yychar+1, "unterminated string literal ignored"); }
+{BADESCAPE}    { ErrMsg.fatal(yyline+1, yychar+1, "string literal with bad escaped character ignored"); }
+{UNTERMBADSTR} { ErrMsg.fatal(yyline+1, yychar+1, "unterminated string literal with bad escaped character ignored"); }
+.              { ErrMsg.fatal(yyline+1, yychar+1, "illegal character ignored: " + yytext()); }
