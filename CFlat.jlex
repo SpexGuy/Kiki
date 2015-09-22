@@ -54,7 +54,7 @@ class StrLitTokenVal extends TokenVal {
 DIGIT       = [0-9]
 WHITESPACE  = [\040\t]
 LETTER      = [a-zA-Z]
-IDENT_CHAR  = {LETTER}|[_]
+IDENT_CHAR  = ({LETTER}|[_])
 NEWLINE     = [\r]?[\n]
 PLUSPLUS    = "++"
 DIVIDE      = "/"
@@ -76,7 +76,7 @@ PLUS        = "+"
 ASSIGN      = "="
 LESSEQ      = "<="
 IF          = "if"
-DOT         = "."
+DOT         = [.]
 ID          = {IDENT_CHAR}({IDENT_CHAR}|{DIGIT})*
 MINUSMINUS  = "--"
 RETURN      = "return"
@@ -93,7 +93,7 @@ READ        = ">>"
 NOTEQUALS   = "!="
 WHILE       = "while"
 GREATEREQ   = ">="
-STRING_CHAR = [^\\\"]|[\\][\\\'\"nt?]
+STRING_CHAR = ([^\\\"]|[\\][\\\'\"nt?])
 BADSTR_CHAR = [\\][^\\\'\"nt?]
 STRINGLITERAL = [\"]{STRING_CHAR}*[\"]
 UNTERMSTRING  = [\"]{STRING_CHAR}*{NEWLINE}
