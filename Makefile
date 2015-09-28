@@ -13,7 +13,7 @@
 # define the java compiler to be used and the flags
 JC = javac
 FLAGS = -g -cp $(CP)
-CP = ~cs536-1/public/tools/deps:.
+CP = /usr/share/java/cup.jar:~/Kiki/:.
 
 P2.class: P2.java Yylex.class sym.class
 	$(JC) $(FLAGS) P2.java
@@ -35,14 +35,15 @@ ErrMsg.class: ErrMsg.java
 # testing - add more here to run your tester and compare its results
 # to expected results
 ###
-test:
-	java P2 
+test: P2.class
+	java -cp $(CP) P2 
 	diff allTokens.in allTokens.out
 
 ###
 # clean up
 ###
 
+.PHONY: clean
 clean:
 	rm -f *~ *.class CFlat.jlex.java
 
