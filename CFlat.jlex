@@ -96,7 +96,7 @@ GREATEREQ   = ">="
 STRING_CHAR = ([^\\\"]|[\\][\\\'\"nt?])
 BADSTR_CHAR = [\\][^\\\'\"nt?]
 STRINGLITERAL = [\"]{STRING_CHAR}*[\"]
-UNTERMSTRING  = [\"]{STRING_CHAR}*{NEWLINE}
+UNTERMSTRING  = [\"]{STRING_CHAR}*
 BADESCAPE     = [\"]{STRING_CHAR}*{BADSTR_CHAR}({BADSTR_CHAR}|{STRING_CHAR})*[\"]
 UNTERMBADSTR  = [\"]{STRING_CHAR}*{BADSTR_CHAR}({BADSTR_CHAR}|{STRING_CHAR})*[\\]?{NEWLINE}
 COMMENT     = (//|#)[^\n]*{NEWLINE}
@@ -154,6 +154,7 @@ return new Symbol(sym.EOF);
     try {
       return new Symbol(sym.INTLITERAL, new IntLitTokenVal(yyline+1, yychar+1, Integer.parseInt(yytext())));
     } catch (NumberFormatException e) {
+        ErrMsg.fatal(yyline+1, yychar+1, "integer literal too large; using max value");
       return new Symbol(sym.INTLITERAL, new IntLitTokenVal(yyline+1, yychar+1, Integer.MAX_VALUE));
     }
 }
