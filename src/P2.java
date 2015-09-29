@@ -1,5 +1,9 @@
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.System;
 import java.util.*;
 import java.io.*;
+
 import java_cup.runtime.*;  // defines Symbol
 
 /**
@@ -15,6 +19,11 @@ public class P2 {
         testAllTokens();
 
         // ADD CALLS TO OTHER TEST METHODS HERE
+        testEOF();
+
+        testBadStringLiteral();
+
+        testBadIntLiteral();
     }
 
     /**
@@ -173,5 +182,101 @@ public class P2 {
             token = scanner.next_token();
         } // end while
         outFile.close();
+    }
+
+
+    private static void testEOF() throws IOException{
+        // open input and output files
+        FileReader inFile = null;
+        ByteArrayOutputStream outPrint = new ByteArrayOutputStream();
+        PrintStream err = System.err;
+        System.setErr(new PrintStream(outPrint));
+        try {
+            inFile = new FileReader("eof.txt");
+        } catch (FileNotFoundException ex) {
+            System.err.println("File eof.txt not found.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+
+        System.setErr(err);
+        if ((token.sym != sym.EOF)) throw new java.lang.AssertionError(token.sym);
+        String error_message = "1:1 ***ERROR*** unterminated string literal ignored\n";
+        if (!outPrint.toString().equals(error_message))
+            throw new java.lang.AssertionError(String.format("%s\n != %s\n", outPrint.toString(), error_message));
+    }
+
+    private static void testBadStringLiteral() throws IOException{
+        // open input and output files
+        FileReader inFile = null;
+        ByteArrayOutputStream outPrint = new ByteArrayOutputStream();
+        PrintStream err = System.err;
+        System.setErr(new PrintStream(outPrint));
+
+        try {
+            inFile = new FileReader("badstring.txt");
+        } catch (FileNotFoundException ex) {
+            System.err.println("File badstring.txt not found.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+
+        System.setErr(err);
+        String error_message = "1:1 ***ERROR*** unterminated string literal with bad escaped character ignored\n";
+        if ((!outPrint.toString().equals(error_message)))
+            throw new java.lang.AssertionError(String.format("%s\ndoes not equal\n%s", outPrint.toString(), error_message));
+        //if ((token.sym != sym.ID)) throw new java.lang.AssertionError(token.sym);
+    }
+
+    private static void testBadIntLiteral() throws IOException{
+        // open input and output files
+        FileReader inFile = null;
+        ByteArrayOutputStream outPrint = new ByteArrayOutputStream();
+        PrintStream err = System.err;
+        System.setErr(new PrintStream(outPrint));
+
+        try {
+            inFile = new FileReader("badint.txt");
+        } catch (FileNotFoundException ex) {
+            System.err.println("File badint.txt not found.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+
+        System.setErr(err);
+        String error_message = "1:1 ***ERROR*** integer literal too large; using max value\n";
+
+
+        if(token.sym != sym.INTLITERAL) {
+            System.out.println("Errors: "+outPrint);
+            System.out.println(token.sym);
+            throw new java.lang.AssertionError(token.sym);
+        }
+
+        if(!outPrint.toString().equals(error_message)) {
+            error_message = error_message.replace("\n", "\\n");
+            throw new java.lang.AssertionError(String.format("%s\n!=%s\n",
+                    outPrint.toString().replace("\n", "\\n"),
+                    error_message));
+        }
+
+
+        if(token.value instanceof IntLitTokenVal){
+            IntLitTokenVal intToken = (IntLitTokenVal) token.value;
+            if(intToken.intVal != Integer.MAX_VALUE){
+                throw new java.lang.AssertionError(intToken.intVal);
+            }
+        }else{
+            throw new java.lang.AssertionError();
+        }
     }
 }
