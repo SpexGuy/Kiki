@@ -24,6 +24,8 @@ public class P2 {
         testBadStringLiteral();
 
         testBadIntLiteral();
+
+        testIllegalCharacter();
     }
 
     /**
@@ -228,10 +230,19 @@ public class P2 {
         Symbol token = scanner.next_token();
 
         System.setErr(err);
-        String error_message = "1:1 ***ERROR*** unterminated string literal with bad escaped character ignored\n";
+        String error_message = "1:1 ***WARNING*** unterminated string literal with bad escaped character ignored\n";
         if ((!outPrint.toString().equals(error_message)))
             throw new java.lang.AssertionError(String.format("%s\ndoes not equal\n%s", outPrint.toString(), error_message));
-        //if ((token.sym != sym.ID)) throw new java.lang.AssertionError(token.sym);
+        if ((token.sym != sym.ID)) throw new java.lang.AssertionError(token.sym);
+
+        if(token.value instanceof IdTokenVal){
+            IdTokenVal t = (IdTokenVal) token.value;
+            if(!t.idVal.equals("abc")){
+                throw new java.lang.AssertionError(t.idVal);
+            }
+        }else{
+            throw new java.lang.AssertionError();
+        }
     }
 
     private static void testBadIntLiteral() throws IOException{
@@ -278,5 +289,34 @@ public class P2 {
         }else{
             throw new java.lang.AssertionError();
         }
+    }
+
+    private static void testIllegalCharacter() throws IOException{
+        // open input and output files
+        FileReader inFile = null;
+        ByteArrayOutputStream outPrint = new ByteArrayOutputStream();
+        PrintStream err = System.err;
+        System.setErr(new PrintStream(outPrint));
+
+        try {
+            inFile = new FileReader("illegal_character.txt");
+        } catch (FileNotFoundException ex) {
+            System.err.println("File illegal_character.txt not found.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+
+        System.setErr(err);
+        String error_message = "1:1 ***ERROR*** illegal character ignored: $\n";
+
+        if(!outPrint.toString().equals(error_message))
+            throw new java.lang.AssertionError(String.format("%s\ndoes not equal\n%s", outPrint.toString(), error_message));
+
+        if(token.sym != sym.EOF)
+            throw new java.lang.AssertionError();
+
     }
 }
