@@ -230,7 +230,7 @@ public class P2 {
         Symbol token = scanner.next_token();
 
         System.setErr(err);
-        String error_message = "1:1 ***WARNING*** unterminated string literal with bad escaped character ignored\n";
+        String error_message = "1:1 ***ERROR*** unterminated string literal with bad escaped character ignored\n";
         if ((!outPrint.toString().equals(error_message)))
             throw new java.lang.AssertionError(String.format("%s\ndoes not equal\n%s", outPrint.toString(), error_message));
         if ((token.sym != sym.ID)) throw new java.lang.AssertionError(token.sym);
