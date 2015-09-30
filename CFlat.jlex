@@ -171,5 +171,5 @@ return new Symbol(sym.EOF);
 
 {UNTERMSTRING} { ErrMsg.fatal(yyline+1, yychar+1, "unterminated string literal ignored"); }
 {BADESCAPE}    { ErrMsg.fatal(yyline+1, yychar+1, "string literal with bad escaped character ignored"); }
-{UNTERMBADSTR} { ErrMsg.fatal(yyline+1, yychar+1, "unterminated string literal with bad escaped character ignored"); }
+{UNTERMBADSTR} { ErrMsg.warn(yyline+1, yychar+1, "unterminated string literal with bad escaped character ignored"); }
 .              { ErrMsg.fatal(yyline+1, yychar+1, "illegal character ignored: " + yytext()); }
