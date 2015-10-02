@@ -93,7 +93,7 @@ READ        = ">>"
 NOTEQUALS   = "!="
 WHILE       = "while"
 GREATEREQ   = ">="
-STRING_CHAR = ([^\\\"]|[\\][\\\'\"nt?])
+STRING_CHAR = ([^\\\"\n]|[\\][\\\'\"nt?])
 BADSTR_CHAR = [\\][^\\\'\"nt?]
 STRINGLITERAL = [\"]{STRING_CHAR}*[\"]
 UNTERMSTRING  = [\"]{STRING_CHAR}*
@@ -116,10 +116,10 @@ return new Symbol(sym.EOF);
 
 %%
 
-\n { /*"*/ }
+\n { /*"*/ yychar = -1; }
 \r { }
 {WHITESPACE}+  { }
-{COMMENT} { }
+{COMMENT} { yychar = -yytext().length(); }
 
 {PLUSPLUS}  { return new Symbol(sym.PLUSPLUS, new TokenVal(yyline+1, yychar+1)); }
 {DIVIDE}  { return new Symbol(sym.DIVIDE, new TokenVal(yyline+1, yychar+1)); }
@@ -171,5 +171,6 @@ return new Symbol(sym.EOF);
 
 {UNTERMSTRING} { ErrMsg.fatal(yyline+1, yychar+1, "unterminated string literal ignored"); }
 {BADESCAPE}    { ErrMsg.fatal(yyline+1, yychar+1, "string literal with bad escaped character ignored"); }
-{UNTERMBADSTR} { ErrMsg.fatal(yyline+1, yychar+1, "unterminated string literal with bad escaped character ignored"); }
+{UNTERMBADSTR} { ErrMsg.fatal(yyline+1, yychar+1, "unterminated string literal with bad escaped character ignored");
+                 yychar = -yytext().length(); }
 .              { ErrMsg.fatal(yyline+1, yychar+1, "illegal character ignored: " + yytext()); }
