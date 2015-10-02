@@ -13,7 +13,7 @@
 # define the java compiler to be used and the flags
 JC = javac
 FLAGS = -g -cp $(CP)
-CP = /usr/share/java/cup.jar:~/Kiki/:.
+CP = lib/cup.jar:.
 
 P2.class: P2.java Yylex.class sym.class
 	$(JC) $(FLAGS) P2.java
