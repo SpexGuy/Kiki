@@ -1,0 +1,26 @@
+
+
+++foo++ = "Really bad code"/46;
+struct NotAStruct {
+    int cin;
+    bool cout;
+    void DefinitelyNotAStruct(bool foo, int bar, while true) {
+        cin = 2147483647           / 5;
+        if=--;
+        true = false;
+        while (true && 1);
+        return lolnotyet;
+        "Normal String"
+
+
+
+        System.out.println(cout << "This isn't java!" >> cin);
+        iffalse=whiletrue;
+        while (true != false);
+        false--;
+        if (false) {
+            false = false + 1*2;
+
+        }
+    }
+}

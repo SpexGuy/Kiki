@@ -18,6 +18,8 @@ public class P2 {
         // test all tokens
         testAllTokens();
 
+        testAllTokensLines();
+
         // ADD CALLS TO OTHER TEST METHODS HERE
         testEOF();
 
@@ -181,6 +183,218 @@ public class P2 {
 				outFile.println("UNKNOWN TOKEN");
             } // end switch
 
+            token = scanner.next_token();
+        } // end while
+        outFile.close();
+    }
+
+    private static void testAllTokensLines() throws IOException {
+        // open input and output files
+        FileReader inFile = null;
+        PrintWriter outFile = null;
+        try {
+            inFile = new FileReader("main.yes");
+            outFile = new PrintWriter(new FileWriter("main.no"));
+        } catch (FileNotFoundException ex) {
+            System.err.println("File main.yes not found.");
+            System.exit(-1);
+        } catch (IOException ex) {
+            System.err.println("main.yes cannot be opened.");
+            System.exit(-1);
+        }
+
+        // create and call the scanner
+        Yylex scanner = new Yylex(inFile);
+        Symbol token = scanner.next_token();
+        int charnum = 1;
+        int linenum = 1;
+        while (token.sym != sym.EOF) {
+            int tokenLine = ((TokenVal) token.value).linenum;
+            int tokenChar = ((TokenVal) token.value).charnum;
+            while (linenum < tokenLine) {
+                outFile.println();
+                charnum = 1;
+                linenum++;
+            }
+            while (charnum < tokenChar) {
+                outFile.print(" ");
+                charnum++;
+            }
+            switch (token.sym) {
+                case sym.BOOL:
+                    outFile.print("bool");
+                    charnum += 4;
+                    break;
+                case sym.INT:
+                    outFile.print("int");
+                    charnum += 3;
+                    break;
+                case sym.VOID:
+                    outFile.print("void");
+                    charnum += 4;
+                    break;
+                case sym.TRUE:
+                    outFile.print("true");
+                    charnum += 4;
+                    break;
+                case sym.FALSE:
+                    outFile.print("false");
+                    charnum += 5;
+                    break;
+                case sym.STRUCT:
+                    outFile.print("struct");
+                    charnum += 6;
+                    break;
+                case sym.CIN:
+                    outFile.print("cin");
+                    charnum += 3;
+                    break;
+                case sym.COUT:
+                    outFile.print("cout");
+                    charnum += 4;
+                    break;
+                case sym.IF:
+                    outFile.print("if");
+                    charnum += 2;
+                    break;
+                case sym.ELSE:
+                    outFile.print("else");
+                    charnum += 4;
+                    break;
+                case sym.WHILE:
+                    outFile.print("while");
+                    charnum += 5;
+                    break;
+                case sym.RETURN:
+                    outFile.print("return");
+                    charnum += 6;
+                    break;
+                case sym.ID:
+                    outFile.print(((IdTokenVal) token.value).idVal);
+                    charnum += ((IdTokenVal) token.value).idVal.length();
+                    break;
+                case sym.INTLITERAL:
+                    outFile.print(((IntLitTokenVal) token.value).intVal);
+                    charnum += (""+((IntLitTokenVal) token.value).intVal).length();
+                    break;
+                case sym.STRINGLITERAL:
+                    outFile.print(((StrLitTokenVal) token.value).strVal);
+                    charnum += ((StrLitTokenVal) token.value).strVal.length();
+                    break;
+                case sym.LCURLY:
+                    outFile.print("{");
+                    charnum++;
+                    break;
+                case sym.RCURLY:
+                    outFile.print("}");
+                    charnum++;
+                    break;
+                case sym.LPAREN:
+                    outFile.print("(");
+                    charnum++;
+                    break;
+                case sym.RPAREN:
+                    outFile.print(")");
+                    charnum++;
+                    break;
+                case sym.SEMICOLON:
+                    outFile.print(";");
+                    charnum++;
+                    break;
+                case sym.COMMA:
+                    outFile.print(",");
+                    charnum++;
+                    break;
+                case sym.DOT:
+                    outFile.print(".");
+                    charnum++;
+                    break;
+                case sym.WRITE:
+                    outFile.print("<<");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.READ:
+                    outFile.print(">>");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.PLUSPLUS:
+                    outFile.print("++");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.MINUSMINUS:
+                    outFile.print("--");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.PLUS:
+                    outFile.print("+");
+                    charnum++;
+                    break;
+                case sym.MINUS:
+                    outFile.print("-");
+                    charnum++;
+                    break;
+                case sym.TIMES:
+                    outFile.print("*");
+                    charnum++;
+                    break;
+                case sym.DIVIDE:
+                    outFile.print("/");
+                    charnum++;
+                    break;
+                case sym.NOT:
+                    outFile.print("!");
+                    charnum++;
+                    break;
+                case sym.AND:
+                    outFile.print("&&");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.OR:
+                    outFile.print("||");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.EQUALS:
+                    outFile.print("==");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.NOTEQUALS:
+                    outFile.print("!=");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.LESS:
+                    outFile.print("<");
+                    charnum++;
+                    break;
+                case sym.GREATER:
+                    outFile.print(">");
+                    charnum++;
+                    break;
+                case sym.LESSEQ:
+                    outFile.print("<=");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.GREATEREQ:
+                    outFile.print(">=");
+                    charnum++;
+                    charnum++;
+                    break;
+                case sym.ASSIGN:
+                    outFile.print("=");
+                    charnum++;
+                    break;
+                default:
+                    outFile.print("UNKNOWN TOKEN");
+            } // end switch
+            //outFile.println(" "+tokenLine+":"+tokenChar);
             token = scanner.next_token();
         } // end while
         outFile.close();
