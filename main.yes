@@ -1,0 +1,26 @@
+// Testing for tokens ++ / == > < >= <= ( ) // more comment */ */ # foo */ \ ; ! << - -- && || while return bool = "bad string\f\%" { unused block } . true false void cout cin != struct if int 68943 "unterminated string
+# Testing for tokens 2 ++ / == > < >= <= ( ) // more comment */ */ # foo */ \ ; ! << - -- && || while return bool = "bad string\f\%" { unused block } . true false void cout cin != struct if int 68943 "unterminated string
+++foo++ = "Really bad code"/46;
+struct NotAStruct {
+    int cin;
+    bool cout;
+    void DefinitelyNotAStruct(bool foo, int bar, while true) {
+        cin = 51204893751098345091 / 5; // too big!
+        if=--;
+        true = false;
+        while (true && 1); // doesn't execute because true == false and !false;
+        return lolnotyet;
+        "Normal String"
+        "Bad String \g lol"
+        "Unterminated String
+        "Unterminated Bad Str\ing
+        System.out.println(cout << "This isn't java!" >> cin);
+        iffalse=whiletrue; // check ids
+        while (true != false); // doesn't execute lol
+        false--;
+        if (false) {
+            false = false + 1*2;
+
+        }
+    }
+}
