@@ -207,7 +207,7 @@ public class P2 {
         System.setErr(err);
         if ((token.sym != sym.EOF)) throw new java.lang.AssertionError(token.sym);
         String error_message = "1:1 ***ERROR*** unterminated string literal ignored\n";
-        if (!outPrint.toString().equals(error_message))
+        if (!outPrint.toString().replace("\r", "").equals(error_message))
             throw new java.lang.AssertionError(String.format("%s\n != %s\n", outPrint.toString(), error_message));
     }
 
@@ -231,7 +231,7 @@ public class P2 {
 
         System.setErr(err);
         String error_message = "1:1 ***ERROR*** unterminated string literal with bad escaped character ignored\n";
-        if ((!outPrint.toString().equals(error_message)))
+        if ((!outPrint.toString().replace("\r", "").equals(error_message)))
             throw new java.lang.AssertionError(String.format("%s\ndoes not equal\n%s", outPrint.toString(), error_message));
         if ((token.sym != sym.ID)) throw new java.lang.AssertionError(token.sym);
 
@@ -273,7 +273,7 @@ public class P2 {
             throw new java.lang.AssertionError(token.sym);
         }
 
-        if(!outPrint.toString().equals(error_message)) {
+        if(!outPrint.toString().replace("\r", "").equals(error_message)) {
             error_message = error_message.replace("\n", "\\n");
             throw new java.lang.AssertionError(String.format("%s\n!=%s\n",
                     outPrint.toString().replace("\n", "\\n"),
@@ -312,7 +312,7 @@ public class P2 {
         System.setErr(err);
         String error_message = "1:1 ***ERROR*** illegal character ignored: $\n";
 
-        if(!outPrint.toString().equals(error_message))
+        if(!outPrint.toString().replace("\r", "").equals(error_message))
             throw new java.lang.AssertionError(String.format("%s\ndoes not equal\n%s", outPrint.toString(), error_message));
 
         if(token.sym != sym.EOF)
