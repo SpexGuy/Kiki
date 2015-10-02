@@ -37,7 +37,10 @@ ErrMsg.class: ErrMsg.java
 ###
 test: P2.class
 	java -cp $(CP) P2 
-	diff allTokens.in allTokens.out
+	sed -r -i.no_comment '/^#|^\/\// d' allTokens.in
+	diff allTokens.in.no_comment allTokens.out
+	rm *.no_comment
+	diff main.yes.correct main.no
 
 ###
 # clean up

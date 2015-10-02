@@ -1,5 +1,3 @@
-// Testing for tokens ++ / == > < >= <= ( ) // more comment */ */ # foo */ \ ; ! << - -- && || while return bool = "bad string\f\%" { unused block } . true false void cout cin != struct if int 68943 "unterminated string
-# Testing for tokens 2 ++ / == > < >= <= ( ) // more comment */ */ # foo */ \ ; ! << - -- && || while return bool = "bad string\f\%" { unused block } . true false void cout cin != struct if int 68943 "unterminated string
 ++foo++ = "Really bad code"/46;
 struct NotAStruct {
     int cin;
