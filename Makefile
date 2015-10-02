@@ -39,7 +39,6 @@ test: P2.class
 	java -cp $(CP) P2 
 	sed -r -i.no_comment '/^#|^\/\// d' allTokens.in
 	diff allTokens.in.no_comment allTokens.out
-	rm *.no_comment
 	diff main.yes.correct main.no
 
 ###
@@ -52,3 +51,5 @@ clean:
 
 cleantest:
 	rm -f allTokens.out
+	rm -f *.no_comment
+	rm -f main.no
